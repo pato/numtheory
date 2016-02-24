@@ -1,5 +1,9 @@
 import Data.List (sortOn)
 
+-- Check if solutions exist to a linear diophantene equation
+solutionsExist :: (Integral a) => a -> a -> a -> Bool
+solutionsExist a b c = c `mod` (gcd a b) == 0
+
 -- Get a solution to linear diophantene equation
 -- or (0,0) if there are no solutions
 solve :: (Integral a) => a -> a -> a -> (a,a)
@@ -7,6 +11,14 @@ solve a b c = (mult * s, mult * t)
   where (gcd, s, t) = eGcd a b
         mult = c `div` gcd
 
+-- Get the infinite set of all solutions to diophantene linear equation
+-- Note: Undefined if there are no solutions
+solveAll :: (Integral a) => a -> a -> a-> [(a,a)]
+solveAll a b c = [ (x0 + (b `div` gcd) * t, y0 - (a `div` gcd) * t) | t <- ints]
+    where (gcd, s, t) = eGcd a b
+          mult =  c `div` gcd
+          x0 = s * mult
+          y0 = t * mult
 
 -- Extended GCD helper function which takes
 -- a tuple representing the last two entries of calculation
@@ -24,13 +36,6 @@ eGcd :: (Integral a) => a -> a -> (a, a, a)
 eGcd a b = (r, s, t)
   where (r,s,t,_,_,_) = eGcd' (a, 1, 0, b, 0, 1)
 
--- Get the infinite set of all solutions to diophantene linear equation
-solveAll :: (Integral a) => a -> a -> a-> [(a,a)]
-solveAll a b c = [ (x0 + (b `div` gcd) * t, y0 - (a `div` gcd) * t) | t <- ints]
-    where (gcd, s, t) = eGcd a b
-          mult =  c `div` gcd
-          x0 = s * mult
-          y0 = t * mult
 
 -- Set of all integers (diagonalized)
 ints :: Integral a => [a]
