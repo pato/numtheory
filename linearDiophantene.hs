@@ -1,7 +1,11 @@
+import Data.List (sortOn)
+
 -- Get a solution to linear diophantene equation
+-- or (0,0) if there are no solutions
 solve :: (Integral a) => a -> a -> a -> (a,a)
-solve a b c = (c*s, c*t)
+solve a b c = (mult * s, mult * t)
   where (gcd, s, t) = eGcd a b
+        mult = c `div` gcd
 
 
 -- Extended GCD helper function which takes
@@ -24,11 +28,19 @@ eGcd a b = (r, s, t)
 solveAll :: (Integral a) => a -> a -> a-> [(a,a)]
 solveAll a b c = [ (x0 + (b `div` gcd) * t, y0 - (a `div` gcd) * t) | t <- ints]
     where (gcd, s, t) = eGcd a b
-          x0 = s*c
-          y0 = t*c
+          mult =  c `div` gcd
+          x0 = s * mult
+          y0 = t * mult
 
+-- Set of all integers (diagonalized)
 ints :: Integral a => [a]
 ints = concatMap (\x -> [x, negate x]) [1..]
 
--- Get the form of all solutions to diophantene equatio
--- solve a b c (x,y) = (Coefficient a, Constant c, Grounding g) => a -> a -> c -> (g,g) -> ((c,a),(c,a))
+-- Homework Problem 5.4
+positiveSolutions = filter ((>1) . snd) $ filter ((>0) . fst) $ (solveAll 18 33 549)
+-- Get the 3 solutions that have both positive values and sort them based on their sum
+sortedSolutions =  sortOn (\(a,b) -> a + b) $ take 3 positiveSolutions
+-- Get the smallest
+smallest = head sortedSolutions
+-- Number of oranges + grapefruit
+fruits = (o + g) where (o,g) = smallest
