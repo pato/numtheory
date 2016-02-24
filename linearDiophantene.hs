@@ -20,6 +20,15 @@ eGcd :: (Integral a) => a -> a -> (a, a, a)
 eGcd a b = (r, s, t)
   where (r,s,t,_,_,_) = eGcd' (a, 1, 0, b, 0, 1)
 
+-- Get the infinite set of all solutions to diophantene linear equation
+solveAll :: (Integral a) => a -> a -> a-> [(a,a)]
+solveAll a b c = [ (x0 + (b `div` gcd) * t, y0 - (a `div` gcd) * t) | t <- ints]
+    where (gcd, s, t) = eGcd a b
+          x0 = s*c
+          y0 = t*c
+
+ints :: Integral a => [a]
+ints = concatMap (\x -> [x, negate x]) [1..]
 
 -- Get the form of all solutions to diophantene equatio
 -- solve a b c (x,y) = (Coefficient a, Constant c, Grounding g) => a -> a -> c -> (g,g) -> ((c,a),(c,a))
