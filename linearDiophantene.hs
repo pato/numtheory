@@ -4,6 +4,10 @@ import Data.List (sortOn)
 solutionsExist :: (Integral a) => a -> a -> a -> Bool
 solutionsExist a b c = c `mod` (gcd a b) == 0
 
+--- Solve a linear congruence
+solveCongruence :: (Integral a) => a -> a-> a-> a
+solveCongruence a b m = (fst (solve a m b)) `mod` m
+
 -- Get a solution to linear diophantene equation
 -- or (0,0) if there are no solutions
 solve :: (Integral a) => a -> a -> a -> (a,a)
