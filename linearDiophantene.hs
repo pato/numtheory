@@ -4,22 +4,13 @@ import Data.List (sortOn)
 solutionsExist :: (Integral a) => a -> a -> a -> Bool
 solutionsExist a b c = c `mod` (gcd a b) == 0
 
---- Solve a linear congruence
+-- Solve a linear congruence
 solveCongruence :: (Integral a) => a -> a-> a-> a
 solveCongruence a b m = (fst (solve a m b)) `mod` m
 
 -- Calculate a congruence inverse
 congInv :: (Integral a) => a -> a-> a
 congInv n m = solveCongruence n 1 m
-
--- Solve an instance of Chinese Remainder Theorem with two equations
-solveCRT2 :: (Integral a) => (a, a) -> (a, a) -> a
-solveCRT2 (c1, n1) (c2, n2) = (c1 * m1 * m1' + c2 * m2 * m2') `mod` m
-    where m = n1 * n2
-          m1 = n2
-          m2 = n1
-          m1' = congInv m1 n1
-          m2' = congInv m2 n2
 
 -- Solve system of equations using Chinese Remainder Theorem
 solveCRT :: (Integral a) => [(a,a)] -> a
