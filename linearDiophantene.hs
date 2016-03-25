@@ -8,6 +8,33 @@ solutionsExist a b c = c `mod` (gcd a b) == 0
 solveCongruence :: (Integral a) => a -> a-> a-> a
 solveCongruence a b m = (fst (solve a m b)) `mod` m
 
+-- Calculate a congruence inverse
+congInv :: (Integral a) => a -> a-> a
+congInv n m = solveCongruence n 1 m
+
+-- Solve an instance of Chinese Remainder Theorem with two equations
+solveCRT2 :: (Integral a) => (a, a) -> (a, a) -> a
+solveCRT2 (c1, n1) (c2, n2) = (c1 * m1 * m1' + c2 * m2 * m2') `mod` m
+    where m = n1 * n2
+          m1 = n2
+          m2 = n1
+          m1' = congInv m1 n1
+          m2' = congInv m2 n2
+
+-- Solve system of equations using Chinese Remainder Theorem
+solveCRT :: (Integral a) => [(a,a)] -> a
+solveCRT xs =  x `mod` m
+    where x = foldl (+) 0 (map f xs)
+          ns = map (\(c,n) -> n) xs
+          m = foldl (*) 1 ns
+          f = \(c,n) -> c * (congInv (getM ns n) n) * (getM ns n)
+
+-- Given a list of numbers and a number, return the product of every element
+-- in the first list except for the specified number
+getM :: (Integral a) => [a] -> a -> a
+getM xs n = foldl (*) 1 (filter (\x -> x /= n) xs)
+
+
 -- Get a solution to linear diophantene equation
 -- or (0,0) if there are no solutions
 solve :: (Integral a) => a -> a -> a -> (a,a)
