@@ -1,3 +1,5 @@
+module Primes where
+
 -- Prime factorization of number
 primeFactors :: (Integral a) => a -> [a]
 primeFactors 1 = []
