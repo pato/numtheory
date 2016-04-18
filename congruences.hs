@@ -1,3 +1,4 @@
+module Congruences where
 import Data.List (sortOn)
 
 -- Check if solutions exist to a linear diophantene equation
