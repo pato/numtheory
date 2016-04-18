@@ -1,8 +1,10 @@
 module Crypto where
 
-import Congruences
-import Data.Char
-import Data.String
+import Congruences(congInv)
+import Data.Char(Char, ord, chr)
+import Data.String(String)
+import Data.List(sort, group, sortBy)
+import Data.Function (on)
 
 caesarShiftEnc :: Int -> String -> String
 caesarShiftEnc k plaintext = cyphertext
@@ -29,8 +31,17 @@ affineShiftDec a k cyphertext = plaintext
           cypherints = map c2i cyphertext
           a' = congInv a 26
 
+freqDist :: String -> [(Char, Int)]
+freqDist text = sorted
+    where sorted = sortBy (compare `on` snd) freqs
+          freqs  = map (\x -> (head x, length x)) . group . sort $ text
 
--- encodeByChar (Char -> Char) -> String -> String
+
+-- 8 : "kyvmr clvfw kyvbv pzjjv mvekv ve"
+-- 12: "mjmzk cxunm gwiry vcpuw mprrw gmiop msnys ryraz pxmcd wprye yxd"
+
+cdiff :: Char -> Char -> Int
+cdiff a b = (c2i a - c2i b) `mod` 26
 
 c2i :: Char -> Int
 c2i c = ord c - ord 'a'
