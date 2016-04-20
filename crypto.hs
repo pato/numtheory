@@ -35,26 +35,33 @@ affineShiftDec a k cyphertext = plaintext
           cyphertext' = filter (\c -> c /= ' ') cyphertext
           a' = congInv a 26
 
--- guess what the letters that correspond to e and t are and try to decode
--- affineGuess :: Char -> Char -> String -> String
+-- Brute force an affine shift encryption
+bruteForceAffine :: String -> [(Int, Int, String)]
+bruteForceAffine cyphertext = map (\(a,k) -> (a,k,affineShiftDec a k cyphertext)) [(x,y) | x <- [1..26], y <- [1..26]]
 
-bruteForce :: String -> [(Int, Int, String)]
-bruteForce cyphertext = map (\(a,k) -> (a,k,affineShiftDec a k cyphertext)) [(x,y) | x <- [1..26], y <- [1..26]]
-
+-- Get sorted character frequency distributed
 freqDist :: String -> [(Char, Int)]
 freqDist text = sorted
     where sorted = sortBy (compare `on` snd) freqs
           freqs  = map (\x -> (head x, length x)) . group . sort $ text
 
+-- get numerical difference between two characters
+cdiff :: Char -> Char -> Int
+cdiff a b = (c2i a - c2i b) `mod` 26
+
+-- convert character to numberical represntation
+c2i :: Char -> Int
+c2i c = ord c - ord 'a'
+
+-- convert numerical representation to character
+i2c :: Int -> Char
+i2c i = chr (i + ord 'a')
+
+
+-- a is the parameters to the mapping fn (have a tuple for > 1)
+-- just have an (Int -> Int) and preapply the arguments to the fn (nice)
+-- shiftEnc :: a -> (a -> Int -> Int) -> String -> String
 
 -- 8 : "kyvmr clvfw kyvbv pzjjv mvekv ve"
 -- 12: "mjmzk cxunm gwiry vcpuw mprrw gmiop msnys ryraz pxmcd wprye yxd"
 
-cdiff :: Char -> Char -> Int
-cdiff a b = (c2i a - c2i b) `mod` 26
-
-c2i :: Char -> Int
-c2i c = ord c - ord 'a'
-
-i2c :: Int -> Char
-i2c i = chr (i + ord 'a')
