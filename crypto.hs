@@ -39,10 +39,10 @@ affineShiftDec a k cyphertext = plaintext
           a' = congInv a 26
 
 rsaEnc :: Int -> Int -> String -> [Int]
-rsaEnc e n plaintext = cypherblocks
+rsaEnc e n plaintext = plainblocks -- cypherblocks
     where cypherblocks = map ( \b -> fmodExp b e n) plainblocks
           plainblocks  = map (unDigits 10) $ chunksOf blockSize plainints
-          plainints    = map un9 $ concat $ map (digits 10) $ map c2i9 plaintext'
+          plainints    = concat $ map c2il plaintext'
           plaintext'   = filter (\c -> c /= ' ') plaintext
           blockSize    = length $ digits 10 n
 
@@ -64,18 +64,13 @@ cdiff a b = (c2i a - c2i b) `mod` 26
 c2i :: Char -> Int
 c2i c = ord c - ord 'a'
 
--- convert char to number, but replace leading zeroes with 9s (to preserve 2 digit width)
-c2i9 :: Char -> Int
-c2i9 c
-    | i < 10    = 90 + i
-    | otherwise = i
-    where i = c2i c
-
--- replaces 9 with 0
-un9 :: Int -> Int
-un9 i
-    | i == 9    = 0
-    | otherwise = i
+-- convert a character into digit list
+c2il :: Char -> [Int]
+c2il c
+    | length d == 0 = [0,0]
+    | length d == 1 = 0 : d
+    | otherwise    = d
+    where d = digits 10 $ c2i c
 
 -- convert numerical representation to character
 i2c :: Int -> Char
