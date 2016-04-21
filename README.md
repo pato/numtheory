@@ -23,6 +23,7 @@ in each of the files
 
 ## Cryptography
 * Fast modular exponentiation algorithm
+* Frequency analysis of text
 * Encrypt/decrypt using caesar shift cipher
 * Encrypt/decrypt using affine shift cipher
 * Encrypt/decrypt using RSA block cipher
