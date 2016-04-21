@@ -1,9 +1,11 @@
-import Primes
-import Data.Set
+module Euler where
 
-phi :: (Integral a, Fractional b) => a -> [b]
-phi n = f
+import Primes
+import Data.Set(fromList, toList)
+
+phi :: Int -> Int
+phi n = m
     where
-        primes = primeFactors n
+        m = foldl (*) 1 $ map (pred) primesUnique
         primesUnique = toList $ fromList $ primes
-        f = Prelude.map (\x -> 1 - 1/x) primesUnique
+        primes = primeFactors n
