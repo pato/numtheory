@@ -22,6 +22,7 @@ in each of the files
 * Calculate the phi function of a number by primer factorization
 
 ## Cryptography
+* Fast modular exponentiation algorithm
 * Encrypt/decrypt using caesar shift cipher
 * Encrypt/decrypt using affine shift cipher
 * Encrypt/decrypt using RSA block cipher
