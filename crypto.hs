@@ -39,7 +39,7 @@ affineShiftDec a k cyphertext = plaintext
           a' = congInv a 26
 
 rsaEnc :: Int -> Int -> String -> [Int]
-rsaEnc e n plaintext = plainblocks -- cypherblocks
+rsaEnc e n plaintext   = cypherblocks
     where cypherblocks = map ( \b -> fmodExp b e n) plainblocks
           plainblocks  = map (unDigits 10) $ chunksOf blockSize plainints
           plainints    = concat $ map c2il plaintext'
