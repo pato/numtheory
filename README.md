@@ -13,6 +13,19 @@ in each of the files
 * Get the LCM using euclid's algorithm extension
 * Get the GCD/LCM of arbitrary number of numbers
 
+## Congruences
+* Get congruence inverse
+* Solve congruences
+* Solve systems of congruences using Chinese Remainder Theorem
+
+## Euler
+* Calculate the phi function of a number by primer factorization
+
+## Cryptography
+* Encrypt/decrypt using caesar shift cipher
+* Encrypt/decrypt using affine shift cipher
+* Encrypt/decrypt using RSA block cipher
+
 ## Linear Deophantene
 * Check whether an equation has linear diophantene solutions
 * Solve a linear diophantene equation
