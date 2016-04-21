@@ -5,6 +5,9 @@ import Data.Char(Char, ord, chr)
 import Data.String(String)
 import Data.List(sort, group, sortBy)
 import Data.Function (on)
+import Data.Bits(shiftR, testBit)
+import Data.Digits(digits, unDigits)
+import Data.List.Split(chunksOf)
 
 caesarShiftEnc :: Int -> String -> String
 caesarShiftEnc k plaintext = cyphertext
@@ -35,6 +38,14 @@ affineShiftDec a k cyphertext = plaintext
           cyphertext' = filter (\c -> c /= ' ') cyphertext
           a' = congInv a 26
 
+rsaEnc :: Int -> Int -> String -> [Int]
+rsaEnc e n plaintext = cypherblocks
+    where cypherblocks = map ( \b -> fmodExp b e n) plainblocks
+          plainblocks  = map (unDigits 10) $ chunksOf blockSize plainints
+          plainints    = map un9 $ concat $ map (digits 10) $ map c2i9 plaintext'
+          plaintext'   = filter (\c -> c /= ' ') plaintext
+          blockSize    = length $ digits 10 n
+
 -- Brute force an affine shift encryption
 bruteForceAffine :: String -> [(Int, Int, String)]
 bruteForceAffine cyphertext = map (\(a,k) -> (a,k,affineShiftDec a k cyphertext)) [(x,y) | x <- [1..26], y <- [1..26]]
@@ -53,10 +64,28 @@ cdiff a b = (c2i a - c2i b) `mod` 26
 c2i :: Char -> Int
 c2i c = ord c - ord 'a'
 
+-- convert char to number, but replace leading zeroes with 9s (to preserve 2 digit width)
+c2i9 :: Char -> Int
+c2i9 c
+    | i < 10    = 90 + i
+    | otherwise = i
+    where i = c2i c
+
+-- replaces 9 with 0
+un9 :: Int -> Int
+un9 i
+    | i == 9    = 0
+    | otherwise = i
+
 -- convert numerical representation to character
 i2c :: Int -> Char
 i2c i = chr (i + ord 'a')
 
+-- fast modular exponentiation (b^e `mod` m)
+fmodExp :: Int -> Int -> Int -> Int
+fmodExp b 0 m = 1
+fmodExp b e m = t * fmodExp ((b * b) `mod` m) (shiftR e 1) m `mod` m
+           where t = if testBit e 0 then b `mod` m else 1
 
 -- a is the parameters to the mapping fn (have a tuple for > 1)
 -- just have an (Int -> Int) and preapply the arguments to the fn (nice)
