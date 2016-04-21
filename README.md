@@ -17,6 +17,9 @@ in each of the files
 * Get congruence inverse
 * Solve congruences
 * Solve systems of congruences using Chinese Remainder Theorem
+* Check whether an equation has linear diophantene solutions
+* Solve a linear diophantene equation
+* Give the infinite set of solutions to a diophantene equation
 
 ## Euler
 * Calculate the phi function of a number by primer factorization
@@ -28,8 +31,4 @@ in each of the files
 * Encrypt/decrypt using affine shift cipher
 * Encrypt/decrypt using RSA block cipher
 
-## Linear Deophantene
-* Check whether an equation has linear diophantene solutions
-* Solve a linear diophantene equation
-* Give the infinite set of solutions to a diophantene equation
 
