@@ -8,6 +8,7 @@ import Data.Function (on)
 import Data.Bits(shiftR, testBit)
 import Data.Digits(digits, unDigits)
 import Data.List.Split(chunksOf)
+import Euler(phi)
 
 caesarShiftEnc :: Int -> String -> String
 caesarShiftEnc k plaintext = cyphertext
@@ -46,6 +47,14 @@ rsaEnc e n plaintext   = cypherblocks
           plaintext'   = filter (\c -> c /= ' ') plaintext
           blockSize    = length $ digits 10 n
 
+rsaDec :: Int -> Int -> [Int]  -> String
+rsaDec e n cypherblocks = plaintext
+    where plaintext     = map i2c plainints
+          plainints     = map (unDigits 10) $ chunksOf 2 $ concat $ map (i2l blockSize) plainblocks
+          plainblocks   = map (\c -> fmodExp c d n) cypherblocks
+          d             = congInv e $ phi n
+          blockSize     = 3-- length $ digits 10 $ cypherblocks !! 0
+
 -- Brute force an affine shift encryption
 bruteForceAffine :: String -> [(Int, Int, String)]
 bruteForceAffine cyphertext = map (\(a,k) -> (a,k,affineShiftDec a k cyphertext)) [(x,y) | x <- [1..26], y <- [1..26]]
@@ -71,6 +80,19 @@ c2il c
     | length d == 1 = 0 : d
     | otherwise    = d
     where d = digits 10 $ c2i c
+
+-- convert an integer into blocksize digit list
+i2l :: Int -> Int -> [Int]
+i2l blocksize i
+    | l == blocksize = d
+    | l > blocksize = error "can't have integer greater than block size"
+    | otherwise     = append (replicate (blocksize - l) 0) d
+    where l = length d
+          d = digits 10 i
+
+-- append two lists
+append :: [a] -> [a] -> [a]
+append xs ys = foldr (:) ys xs
 
 -- convert numerical representation to character
 i2c :: Int -> Char
