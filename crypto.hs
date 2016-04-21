@@ -53,7 +53,7 @@ rsaDec e n cypherblocks = plaintext
           plainints     = map (unDigits 10) $ chunksOf 2 $ concat $ map (i2l blockSize) plainblocks
           plainblocks   = map (\c -> fmodExp c d n) cypherblocks
           d             = congInv e $ phi n
-          blockSize     = length $ digits 10 $ cypherblocks !! 0
+          blockSize     = length $ digits 10 $ maximum cypherblocks -- fixme: hopefully one of them is full size
 
 -- Brute force an affine shift encryption
 bruteForceAffine :: String -> [(Int, Int, String)]
@@ -85,14 +85,11 @@ c2il c
 i2l :: Int -> Int -> [Int]
 i2l blocksize i
     | l == blocksize = d
-    | l > blocksize = error "can't have integer greater than block size"
+    | l > blocksize = error (show i)  "can't have integer greater than block size"
     | otherwise     = append (replicate (blocksize - l) 0) d
     where l = length d
           d = digits 10 i
-
--- append two lists
-append :: [a] -> [a] -> [a]
-append xs ys = foldr (:) ys xs
+          append xs ys = foldr (:) ys xs
 
 -- convert numerical representation to character
 i2c :: Int -> Char
