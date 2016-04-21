@@ -53,7 +53,7 @@ rsaDec e n cypherblocks = plaintext
           plainints     = map (unDigits 10) $ chunksOf 2 $ concat $ map (i2l blockSize) plainblocks
           plainblocks   = map (\c -> fmodExp c d n) cypherblocks
           d             = congInv e $ phi n
-          blockSize     = 3-- length $ digits 10 $ cypherblocks !! 0
+          blockSize     = length $ digits 10 $ cypherblocks !! 0
 
 -- Brute force an affine shift encryption
 bruteForceAffine :: String -> [(Int, Int, String)]
